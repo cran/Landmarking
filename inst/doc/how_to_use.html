@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Isobel Barrott" />
+
+
+<title>How to use the R package ‘Landmarking’</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">How to use the R package ‘Landmarking’</h1>
+<h4 class="author">Isobel Barrott</h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Below is a step-by-step demonstration of how to use this package. This example looks at using risk assessments recorded at primary care practices to predict the 5-year risk of cardiovascular disease (CVD).</p>
+<p>We will perform the landmarking analysis using both the LOCF and LME methods and compare the results of these two models. The example involves competing risks events in the form of the risk of death from other causes; the cause-specific model will therefore be used as the survival submodel. For more information about the landmark model please see isobelbarrott.github.io/Landmarking.</p>
+</div>
+<div id="exploring-the-datasets" class="section level2">
+<h2>Exploring the datasets</h2>
+<p>First of all, let’s take a look at the dataset we are going to analyse. This dataset is a combination of two datasets: one of these contains the longitudinal (repeat measures) data and one of these contains the time-to-event data.</p>
+<ul>
+<li><p>The longitudinal (repeat measurements) data from CVD risk assessments is in long format. Each row corresponds to a different assessment and an individual may have multiple assessments. The dataset contains information about an individual’s ethnicity, smoking status, diabetes, and standardised systolic blood pressure (SBP). These were recorded at the patient age specified in <code>response_time_sbp_stnd</code>. The standardised total cholesterol to high density lipoprotein (HDL) ratio was also recorded as part of the assessment but was recorded at the patient age specified in <code>response_time_tchdl_stnd</code>, which is up to a month after the other variables were measured.</p></li>
+<li><p>The time-to-event data indicates the time and status of event that each individual experiences. There are three types of events: censoring (this is due to loss to follow-up or the end of the study, indicated by status <code>0</code>), CVD event (indicated by status <code>1</code>), or death from other causes (indicated by status <code>2</code>). It is important when using this package that 0 is used to indicate censoring, 1 to indicate the event of interest, and values 2 or above indicate different competing risks.</p></li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Landmarking)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(data_repeat_outcomes)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data_repeat_outcomes)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   id smoking diabetes ethnicity        dob index   sbp_stnd   tchdl_stnd</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  1       0        0  European 1957-03-26     1  0.6083674  0.462541398</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  2       0        0  European 1952-11-12     1 -0.6701342  0.005126055</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  3       1        0  European 1953-08-03     1  1.2431679  0.183656473</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  3       1        0  European 1953-08-03     2  0.9569143  0.185134324</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  3       1        0  European 1953-08-03     3  1.0044586 -0.391911821</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  4       0        0   Pacific 1959-07-07     1  0.2846879 -0.080660875</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   response_time_tchdl_stnd response_time_sbp_stnd event_status event_time</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                 62.58727               62.57906            1   60.73112</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                 57.26762               57.21561            0   66.07927</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3                 60.87611               60.79671            0   66.10580</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                 56.50376               56.46817            0   66.10580</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                 63.93977               63.92608            0   66.10580</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6                 51.83299               51.81109            0   61.74113</span></span></code></pre></div>
+<p>Looking further at these datasets we see that there are 3000 patients in this study, each with an average of 3.0103333 assessments.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(data_repeat_outcomes<span class="sc">$</span>id))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3000</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">table</span>(data_repeat_outcomes<span class="sc">$</span>id))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3.010333</span></span></code></pre></div>
+<p>Moreover, we can see the breakdown of events</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">unique</span>(data_repeat_outcomes[,<span class="fu">c</span>(<span class="st">&quot;id&quot;</span>,<span class="st">&quot;event_status&quot;</span>)])[,<span class="st">&quot;event_status&quot;</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0    1    2 </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2538  429   33</span></span></code></pre></div>
+<p>So 429 patients in the study (out of 3000) experienced a CVD event and 33 experienced death from other causes.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2>Analysis</h2>
+<p>We are now ready to begin the analysis using the Landmarking package.</p>
+<p>There are a couple of issues to deal with before we start, these stem from the fact that we wish to compare the LOCF and LME longitudinal model. We want to ensure that the same dataset is used for both of these models so that the comparison is fair.</p>
+<p>The first issue is that the presence of <code>NA</code> values means that some individuals in the risk set do not have LOCF values for all the covariates. This means that the LOCF longitudinal model cannot be fitted for these individuals, however the LME longitudinal model can allow missing values in the random effects covariates. As we wish that the dataset that both models are fitted are the same, we should consider removing these individuals from the dataset.</p>
+<p>Helpfully, the <code>Landmarking</code> package contains a function <code>return_ids_with_LOCF</code> to create a dataset with individuals with a LOCF for all covariates contained in the <code>covariates</code> parameter at landmark time <code>x_L</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data_repeat_outcomes <span class="ot">&lt;-</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return_ids_with_LOCF</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data_long =</span> data_repeat_outcomes,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">individual_id =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">covariates =</span> <span class="fu">c</span>(<span class="st">&quot;ethnicity&quot;</span>, <span class="st">&quot;smoking&quot;</span>, <span class="st">&quot;diabetes&quot;</span>, <span class="st">&quot;sbp_stnd&quot;</span>, <span class="st">&quot;tchdl_stnd&quot;</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">covariates_time =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;response_time_sbp_stnd&quot;</span>, <span class="dv">4</span>), <span class="st">&quot;response_time_tchdl_stnd&quot;</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x_L =</span> <span class="fu">c</span>(<span class="dv">60</span>, <span class="dv">61</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p>The second issue is to do with cross-validation, but we will deal with this once we have fitted the LOCF landmark model.</p>
+<p>So we can now fit the landmark model using the LOCF longitudinal submodel. To demonstrate how to use the package, we use only landmark times 60 and 61 years old however we may wish to use more landmark times in practice. For more information about this function, see the Details section of the <code>fit_LOCF_landmark_model</code> documentation.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data_model_landmark_LOCF <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_LOCF_landmark</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data_long =</span> data_repeat_outcomes,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x_L =</span> <span class="fu">c</span>(<span class="dv">60</span>, <span class="dv">61</span>),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x_hor =</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">66</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">covariates =</span> <span class="fu">c</span>(<span class="st">&quot;ethnicity&quot;</span>, <span class="st">&quot;smoking&quot;</span>, <span class="st">&quot;diabetes&quot;</span>, <span class="st">&quot;sbp_stnd&quot;</span>, <span class="st">&quot;tchdl_stnd&quot;</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">covariates_time =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;response_time_sbp_stnd&quot;</span>, <span class="dv">4</span>), <span class="st">&quot;response_time_tchdl_stnd&quot;</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">k =</span> <span class="dv">10</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">individual_id =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">event_time =</span> <span class="st">&quot;event_time&quot;</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">event_status =</span> <span class="st">&quot;event_status&quot;</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">survival_submodel =</span> <span class="st">&quot;cause_specific&quot;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in FUN(X[[i]], ...): 132 individuals have been removed from the model</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; building as they are not in the risk set at landmark age 61</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Fitting longitudinal submodel, landmark age 60&quot;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Complete, landmark age 60&quot;</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Fitting survival submodel, landmark age 60&quot;</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Complete, landmark age 60&quot;</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Fitting longitudinal submodel, landmark age 61&quot;</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Complete, landmark age 61&quot;</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Fitting survival submodel, landmark age 61&quot;</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3 ; coefficient may be infinite.</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Complete, landmark age 61&quot;</span></span></code></pre></div>
+<p>We can see that fitting this model returns the warnings such as <code>Loglik converged before variable  2 ; coefficient may be infinite.</code>. Taking a look at the model fit contained in <code>data_model_landmark_LOCF$model_survival</code>, we can see the confidence intervals for certain folds is very large. This is due there being few observations for these covariates. However, as only the point estimate of the coefficient is needed to calculate the risk prediction, inaccurate standard error values is not a problem. Indeed we have obtained the risk predictions and can take a look at their distribution.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">density</span>(<span class="dv">100</span> <span class="sc">*</span> data_model_landmark_LOCF[[<span class="st">&quot;60&quot;</span>]]<span class="sc">$</span>data<span class="sc">$</span>event_prediction),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Predicted risk of CVD event (%)&quot;</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">&quot;Landmark age 60&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Printing the object that has been outputted returns a list of datasets corresponding to each of the landmark groups. These contain the column <code>event_prediction</code> which indicates the risk prediction of the event of interest.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_model_landmark_LOCF</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`60`</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   id smoking diabetes           ethnicity    sbp_stnd   tchdl_stnd</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  2       0        0            European -0.67013418  0.005126055</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  3       1        0            European  0.95691425  0.185134324</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  4       0        0             Pacific  0.28468785 -0.080660875</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  6       0        0             Pacific  0.01195977 -0.009527314</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  8       1        0 Chinese_other_asian  0.57615543 -0.263779371</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  9       1        0 Chinese_other_asian  0.68745060  0.314483754</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cross_validation_number event_status event_time event_prediction</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                       5            0   65.00000       0.18372278</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                      10            0   65.00000       0.15278193</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3                       8            0   61.74113       0.10378522</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                       8            0   61.81972       0.11601665</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                       4            0   65.00000       0.09842226</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6                      10            0   63.07539       0.08866377</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`61`</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   id smoking diabetes           ethnicity    sbp_stnd   tchdl_stnd</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  2       0        0            European -0.67013418  0.005126055</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  3       1        0            European  1.24316786  0.183656473</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  4       0        0             Pacific  0.28468785 -0.080660875</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  6       0        0             Pacific  0.01195977 -0.009527314</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  8       1        0 Chinese_other_asian  0.57615543 -0.263779371</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6  9       1        0 Chinese_other_asian  0.68745060  0.314483754</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cross_validation_number event_status event_time event_prediction</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1                       5            0   66.00000        0.1436272</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2                      10            0   66.00000        0.1563242</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3                       8            0   61.74113        0.1259180</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4                       8            0   61.81972        0.1325977</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5                       4            0   66.00000        0.1124857</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6                      10            0   63.07539        0.1247429</span></span></code></pre></div>
+<p>The output also contains the prediction error for the model, which is assessed using the Brier score and C-index. The standard error for these estimates can be calculated by setting parameter <code>b</code> to the desired number of bootstrap samples.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data_model_landmark_LOCF[[<span class="st">&quot;60&quot;</span>]]<span class="sc">$</span>prediction_error</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $c_index</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.6336452</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $c_index_standard_error</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $brier_score</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.1113331</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $brier_score_standard_error</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>data_model_landmark_LOCF[[<span class="st">&quot;61&quot;</span>]]<span class="sc">$</span>prediction_error</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $c_index</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.5757325</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $c_index_standard_error</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $brier_score</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.1099324</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $brier_score_standard_error</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span></code></pre></div>
+<p>In order to assess the performance of the model, there is also the <code>plot</code> method which creates a calibration plot which can assess the calibration of the model. The perfect prediction model will have points along the y=x line and deviations from this suggest poor calibration.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> data_model_landmark_LOCF, <span class="at">x_L =</span> <span class="dv">60</span>, <span class="at">n =</span> <span class="dv">5</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAulBMVEUAAAAAACsAAFUAK4AAVaorAAArACsrAFUrgNQzMzNNTU1NTWtNTYhNa6ZNiMRVAABVACtVgIBVqv9rTU1rTWtrTYhra6ZrpuGAKwCAgCuAgFWAqoCA1KqA1P+ITU2ITWuITYiIxP+ma02ma2uma4imxKam4f+qVQCq1P+q/9Sq///EiE3E///UgCvU/6rU///hpmvh///r6+v/qlX/xIj/1ID/1Kr/1NT/4ab//6r//8T//9T//+H///8tWqmIAAAACXBIWXMAAA7DAAAOwwHHb6hkAAALxElEQVR4nO2dDXvbNBDHtS2lZWMUNmBlMGC8LLAubDQNNOv8/b8Wliy/xSedpEgnK757tidOLv9I+VWSFcunExWb1UTuCszdGBBiDAgxBoQYA0KMASEWDOims8HhgRk9BUgYEOJgQHZHx4UBgQ7BLcjqENzFUAcDQhwMyOgQzZELoLtv36nHjz89fvpP93DigIQ+cgB0+/gLBejTr6+rD1+2DycOSLRHOKDrJ380LejjL+9kY9IPDGjSxe6++6f6+PMb/VC/8HltNt0pmQug26eKjH7QPvq/La3EB9CkBTGgMaBFjUHdkQegT7++aM5iL077LCaCAMn/y5gHiRtvQDajrDqJRIwdDAhxMCDEwYAQBwMampg6GNDABOBgQL0JyMGAEAcDQhwMCHEwoMaEycGAlAmTgwEpO+TDgNwlDAhxMCDEwYAQBwOaDNBjyeIBgXwYUOeB+cQEtBRbagtCHQwIcSwZkGBAVofgFmR1CKPnhgF5SBgQ4mBAiGOZgITRM3EsEhCwgGqULBEQtIBqlCwRkJeEASEOBoQ4IED7ywevGFB7BLagtRCP3p8kIGH0GBwwINmKhLg4PUDGFWajxASoQfTw7WkBMq8wGx0mQBshVnVXwztapKrPVgICur8S4pk82OJNKF/VaSQQoP2lQ9daMiAvy1d1Twm0wBPexS7q/6uTAoQsoBodIKD1SlHShLrYlQ+Ppb1Wj18UFg6FLaAaHRCg/eVwhB7H8Mpww+vXBbagUAkOaBQ/JyMNP/32ZuGAqo1Es79sZtKjCEzZlOouJztateSg3q0Q3S+NYQyverz7ZtiK8v1tnT2GGxTcSoEBDW3Ygm67SMNuHDqq6iQSkXgeNByDrl+0r5YDyLLAHAxodya7mGjPYl0Mb9OxZDP69Hthp/lgCQToYI7YzINUUG/T0+p50JPuRJav6jQSCJA+zbtZvqrTSOAWxID6IwCQy1WOMgCJ40uBAMlrif0gXTAgYXJ4lAK2IB8LqzqJBF2BXzqgKBIY0EaIZxu3hZ98VaeRgIDWj/6+fOZ4xSxf1WkkEKB6HiSnQm7nsnxVt3qEyeFbyokCEiaHdykQoGoju1h7PahEQI4LzOGD9PB6UImAIkpgQB6Wr+o0EgaEOCBAZf/UmF5gTdSC9l+9KrEFARegU3WxrdNUOlI9Ykm8FpiPBVRmF4sssQByuDlooYD0IO12J2e+qtNILC3IzfJVnUZyNKAZWdLvAM2DnKZC+f62h2ZcYY7fgrZy+Cntx6p5hTnBIO16B+ecAJGexRhQfwQAGt8fxICmgORFe32ndBmAhNFzdCkwIA+LVI+jJMgC6uIBYQuoaboYr4vpIwgQr4uhp/nSl33iSUoHBO4BHbMUCFBB62JOC6gJBulS1sXcFlAXf5pPKoEA8T2Kbj9WGZA6AgBVjnPExQIqY2XVskl2xFLKHaQ9VpjjAtKzxLkD8llhXiQgMskEUHOxrIAxiEgyBTQ5zfcZ+3S484mn8Bs7IEBjG0Q9N1F02VMZo3tARymlPUIB9RGHOlA1dxpR0wJhLkB9zKoOd86cyjjTIrm52D7qWYc7cyrjsY0zF9fj0MJTGU/uXBgPOTWg3GMQrQRsQXpltTnZ91HPOtw5Yypj2x7Z9POg9pp0H/Wsw52zzYOse2TnA2S3SPVw8dgXmDN0sQIu2qeXgICai/YF3byQUAID8jCqqkeJ0A2QlAII3yObFNDsbl5w2CObEtD8bl6YF6CS1uaTSxgQ4oAAFXTzQnoJCKiYmxcIJDAgD0teddc9spcKyHmPbNJB2q13UQByX2AmHaSdf4ktdwxac8ShPjIAkox4HnRjbUFuO70lrLrfHtmkv8Vc+1dSQJ57ZNP+1HCkkxKQ7wIzISC+iTNmC1qKzewmzkQRugESCFD+mzidkgwfXUq5v8XckgwfW4qbhAEhDhjQ7C7a55OAgOZ30T6fBALE16TnCqg+c/pKAkrxk0CAcl20V3MLP0lAKZ4SEFCmi/YFAfKwiFVnQIhDFDMGqVGa/oJZ+hDmAAkIaL2SN5ltiOdBBCHMARII0L6ZJRKf5r2TDAeV4i0xAJLneFpA/kmGQ0rxl0CA7q8u5DZva8ouFpBkOKCUAAkESKbPWjnuVLpMQD4Wpx5EIcwBklkAElQhzAESGBDtfdIAn5kDor3THuIzb0DEsRrFA+qDe+6eqwy0kXM9h6apppGAXWw7jhdrg5xlmKEMy4yb6zk4TTWNZALIEnF4KzFdv46b65k0xjtAAragkY1DVOujqLmei9no2yXquWriMyPmehbEQfABEgiQStTb3SA0bEEff2pzGUdJZSwq/13EZwBordjszvRv1UGQ893zbniOAcjcfmYNqD27T6OeNZ94uZ6Py+NNI5kAur9qJ9Dt2nMX9SznP3J4jpXr+cg83jSSCaD+7qnkM2kGZPGILLsEBEgculgKQCLPLgEBkgmgySCdApDItEtAgGQKqDvNJ116jpDHm0YCAGomiq4Z1UPq0S2hFgrIy/zrIQQDstVD3DAgWz3EDQOy1kOy6e7iYEBTT7w01TQSQkBN24lXdRoJHaDh/WNRqk4jYUCIgwEhDlpAUatOIyED5Ld+ujxA84jQDZAQAZpJhG6AhAAQNPjEqDqN5GhAqKmzV7JPJ7N0LQg6vUf529JIGBDiSA1o+Ns9ctVpJAkBqR+nCatOI0kHSHct6+oOA0qZZJhGkhgQdzEeg8IBpa46jYQBIQ4GhDgYEOJIByh5FmYaSTJAswxhDpCkAjTPEOYASbIWlL7qNBIGhDgYEOJIAWi+EboBkgSAZhyhGyCJD2jOEboBkgQtiKrqNBIGhDgcAPVBvfqIUxmPrA/q1UeWVMZzD0ANkOCA+oA6fWROIzr7+MoACQ6oD8nUR8ZUxiewwGw2l6BefcSpjMdmaUEMSJrHGERbdRoJDqgP6tVHGVMZZ5DggAapjC3zoDLiKwMkDoDs1nxMIfGVAZI4gEqJrwyQRGpBOapOI2FAiIMBIY6jAfXKgK2ECpJE+B1V0LcNkDAgRMKAEMlJX6qIYQwIMQaEGANCjAEhFgrIviaESKC9YRGJfq9HKYOd15BSqu46IPBdAgEha0J2Cbg3rF2i3+tTijR5GR0tpX6bJgh9l0BAyPVYuwTcG9Yu0e/1KaVq/hJ4KdX1kz8aBfRdAgEhV/TtEl33fm9YXKLf61mKbAZ4KVXXxaDvEggIWROySypob1i7RL/XrxT1iJdSdYCg75KnBQF7w2IS9V6/Um67kRYbh+K3oKPGIHBvWETSvNdvDLpu/wqugCKOQciakF0C7g1rl+j3+pSiOxZeStUBgr7LcfMg05qQXQLuDYuUot/rUUrbS/BSGkCG78IzacQYEGIMCDEGhBgDQowBIUYE6P5KBYt3KReGtn34dvdZ7/j3z4nb+LFD3fB5/dj8m3yat5EBUpswb6AvOyZw+J2DAHWHk0/zNlpA4GbeDKgaAtqdfy8evpVdrsm0JB68bLqYfGml9rS+qA7cUrr77KUQj95XvX7Vv9hshX3Rv0l3sR/kp6mklm7JYwGjBbSuWcjEJjKdq9w7XyZ7218qQPIl2cAaVmO3lO7OJJZV1embJ4/et0LZf9vn3RgkP002wfsrt7x7U6MdpOuq7s6e9Xm61ONGARqMrxO3el3q5Ps6vRzc9Yv/va9655CO/DSF/dxxo/WJ0bagSo8Km2YHlAuVgKGufP1iO9RI/6G708kuKh+3ylF///M2IdpWnSPb5yNAsnsF97BcgHRmChOgA3enMwHaX9YTiMHzMaDd+V/BPSwToK2eEHVd5aCLHbjV66r3nL/t9e38SdKVwOoX2+djQPdXXwf3sEyA7q/qb1R/of3lajhIt+PtoVvp2kG60Y8HaQlsd1YDOhykm3nFRgT3sEyA1KAtW8HkNF+f6cTq0N3oXuoze6tf9S/WIvHgR9m1ujfp5rNWT8+Ce1g5v8WOmfKFn8MWAmjjlmwGtAUAkgNTeLnFAMplDAgxBoQYA0KMASHGgBBjQIj9D2Q8e0Cu1b8CAAAAAElFTkSuQmCC" /><!-- --></p>
+<p>Now we can move on to fitting the landmark model using the LME longitudinal submodel. For more information about this function, see the Details section of the <code>fit_LME_landmark_model</code> documentation. The variables standardised systolic blood pressure (SBP) and standardised total cholesterol to high density lipoprotein (HDL) ratio are continuous and repeatedly measured and so these are included as random effects in the LME model.</p>
+<p>The second issue which was mentioned previously is related to cross-validation. In particular we wish to perform k-fold cross-validation using exactly the same folds for both LOCF and LME models to ensure a fair comparison. To do this we use the parameter <code>cross_validation_df</code> which uses a list of data frames that indicate which fold each individual belongs to. We create this list using the output of <code>fit_LOCF_landmark_model</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cross_validation_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(data_model_landmark_LOCF, <span class="st">&quot;[[&quot;</span>, <span class="at">i =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>There are a couple of computational considerations to highlight about fitting the LME model. The parameter <code>lme_control</code> can be altered in order to change the default values of parameters (such as maximum number of iterations) for the algorithm which fits the LME model. Also setting <code>standardise_time = TRUE</code> standardises the values of the time variable and this helps fitting the LME model (see <code>?fit_LME_landmark_model</code>).</p>
+<p>We fit the LME landmark model in a similar way to the LOCF landmark model, but with a few extra parameters. Fitting the LME model can take some time so here we only use landmark age 60 for demonstration purposes.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>data_model_landmark_LME <span class="ot">&lt;-</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_LME_landmark</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data_long =</span> data_repeat_outcomes[[<span class="st">&quot;60&quot;</span>]],</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x_L =</span> <span class="fu">c</span>(<span class="dv">60</span>),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x_hor =</span> <span class="fu">c</span>(<span class="dv">65</span>),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cross_validation_df =</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      cross_validation_list,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fixed_effects =</span> <span class="fu">c</span>(<span class="st">&quot;ethnicity&quot;</span>, <span class="st">&quot;smoking&quot;</span>, <span class="st">&quot;diabetes&quot;</span>),</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">fixed_effects_time =</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;response_time_sbp_stnd&quot;</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">random_effects =</span> <span class="fu">c</span>(<span class="st">&quot;sbp_stnd&quot;</span>, <span class="st">&quot;tchdl_stnd&quot;</span>),</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">random_effects_time =</span> <span class="fu">c</span>(<span class="st">&quot;response_time_sbp_stnd&quot;</span>, <span class="st">&quot;response_time_tchdl_stnd&quot;</span>),</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">individual_id =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">standardise_time =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">lme_control =</span> nlme<span class="sc">::</span><span class="fu">lmeControl</span>(<span class="at">maxIter =</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>                                     <span class="dv">100</span>, <span class="at">msMaxIter =</span> <span class="dv">100</span>),</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">event_time =</span> <span class="st">&quot;event_time&quot;</span>,</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">event_status =</span> <span class="st">&quot;event_status&quot;</span>,</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">survival_submodel =</span> <span class="st">&quot;cause_specific&quot;</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Fitting longitudinal submodel, landmark age 60&quot;</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Complete, landmark age 60&quot;</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Fitting survival submodel, landmark age 60&quot;</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2,4 ; coefficient may be infinite.</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 1,3,4 ; coefficient may be infinite.</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in coxph.fit(X, Y, istrat, offset, init, control, weights = weights, :</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Loglik converged before variable 2 ; coefficient may be infinite.</span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Complete, landmark age 60&quot;</span></span></code></pre></div>
+<p>Comparing the prediction error for the landmarking with LOCF and LME, we can see a slight improvement when the LME model is used.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data_model_landmark_LOCF[[<span class="st">&quot;60&quot;</span>]]<span class="sc">$</span>prediction_error</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $c_index</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.6336452</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $c_index_standard_error</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $brier_score</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.1113331</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $brier_score_standard_error</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>data_model_landmark_LME[[<span class="st">&quot;60&quot;</span>]]<span class="sc">$</span>prediction_error</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $c_index</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.7562121</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $c_index_standard_error</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $brier_score</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.0880334</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $brier_score_standard_error</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span></code></pre></div>
+<p>Finally, suppose that we wish to predict the risk of the event of interest for a new patient. We need to create a data frame that contains records of all the covariates that were used to form the landmark model. As cross-validation was used, it is necessary to specify which cross-validation fold to use in the prediction. It is possible to predict the risk of the event of interest at any time before the horizon time.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="fu">c</span>(<span class="dv">3001</span>, <span class="dv">3001</span>, <span class="dv">3001</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">response_time_sbp_stnd =</span> <span class="fu">c</span>(<span class="dv">57</span>, <span class="dv">58</span>, <span class="dv">59</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">smoking =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">diabetes =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">ethnicity =</span> <span class="fu">c</span>(<span class="st">&quot;Indian&quot;</span>, <span class="st">&quot;Indian&quot;</span>, <span class="st">&quot;Indian&quot;</span>),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sbp_stnd =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.87</span>, <span class="fl">0.85</span>),</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">tchdl_stnd =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.7</span>, <span class="fl">0.24</span>, <span class="fl">0.3</span>),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">response_time_tchdl_stnd =</span> <span class="fu">c</span>(<span class="dv">57</span>, <span class="dv">58</span>, <span class="dv">59</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> data_model_landmark_LME,</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_L =</span> <span class="dv">60</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_hor =</span> <span class="dv">62</span>,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> newdata,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">cv_fold =</span> <span class="dv">1</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      id ethnicity smoking diabetes  sbp_stnd  tchdl_stnd sbp_stnd_slope</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1: 3001    Indian       0        0 0.5582313 -0.02973252    -0.01736365</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tchdl_stnd_slope event_prediction</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1:       0.02830476       0.04297693</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> data_model_landmark_LME,</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_L =</span> <span class="dv">60</span>,</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_hor =</span> <span class="dv">64</span>,</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> newdata,</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">cv_fold =</span> <span class="dv">1</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      id ethnicity smoking diabetes  sbp_stnd  tchdl_stnd sbp_stnd_slope</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1: 3001    Indian       0        0 0.5582313 -0.02973252    -0.01736365</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    tchdl_stnd_slope event_prediction</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1:       0.02830476       0.07547921</span></span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
