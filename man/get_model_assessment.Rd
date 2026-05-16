@@ -28,7 +28,7 @@ there should be one row for each individual}
 
 \item{x_hor}{Numeric specifying the horizon time(s)}
 
-\item{b}{Integer specifying the number of bootstrap samples to take when calcluating standard error of c-index and Brier score}
+\item{b}{Integer specifying the number of bootstrap samples to take when calculating standard error of c-index and Brier score}
 }
 \value{
 List containing C-index, Brier score and their standard errors
@@ -54,7 +54,7 @@ an event is 1 and not experiencing the event is 0). This is extended to the comp
 not experiencing the event.
 
 For both the c-index and Brier score calculations, inverse probability censoring weighting (IPCW) is used to create weights
-which account for the occurence of censoring. The censoring model assumes for this function is the Kaplan Meier model, i.e. censoring occurs
+which account for the occurrence of censoring. The censoring model assumes for this function is the Kaplan Meier model, i.e. censoring occurs
 independently of covariates.
 
 The c-index is calculated using the \code{cindex} function in package \code{pec}. The Brier score is calculated using
@@ -85,7 +85,7 @@ get_model_assessment(data = data_model_landmark_LOCF[["60"]]$data,
   event_status = "event_status",
   event_time = "event_time",
   x_hor = 65,
-  b = 10)}
+  b = 100)}
 }
 \author{
 Isobel Barrott \email{isobel.barrott@gmail.com}

@@ -16,12 +16,15 @@ table(unique(data_repeat_outcomes[,c("id","event_status")])[,"event_status"])
 
 ## ----9------------------------------------------------------------------------
 data_repeat_outcomes <-
-  return_ids_with_LOCF(
+  find_LOCF_risk_set(
     data_long = data_repeat_outcomes,
     individual_id = "id",
+    event_time = "event_time",
+    event_status = "event_status",
     covariates = c("ethnicity", "smoking", "diabetes", "sbp_stnd", "tchdl_stnd"),
     covariates_time = c(rep("response_time_sbp_stnd", 4), "response_time_tchdl_stnd"),
-    x_L = c(60, 61)
+    x_L = c(60,61),
+    x_hor= c(65,66)
   )
 
 ## ----11-----------------------------------------------------------------------
@@ -67,11 +70,11 @@ data_model_landmark_LME <-
     x_hor = c(65),
     cross_validation_df =
       cross_validation_list,
-    fixed_effects = c("ethnicity", "smoking", "diabetes"),
-    fixed_effects_time =
+    predictors_LME = c("ethnicity", "smoking", "diabetes"),
+    predictors_LME_time =
       "response_time_sbp_stnd",
-    random_effects = c("sbp_stnd", "tchdl_stnd"),
-    random_effects_time = c("response_time_sbp_stnd", "response_time_tchdl_stnd"),
+    responses_LME = c("sbp_stnd", "tchdl_stnd"),
+    responses_LME_time = c("response_time_sbp_stnd", "response_time_tchdl_stnd"),
     individual_id = "id",
     standardise_time = TRUE,
     lme_control = nlme::lmeControl(maxIter =

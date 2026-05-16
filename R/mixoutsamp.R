@@ -20,7 +20,7 @@ mixoutsamp <- function(model, newdata) {
   n = dim(newdata)[1]
 
   #----error message
-  if (class(model) != "lme") {
+  if (!(inherits(model,"lme"))) {
     stop("Error: model is not of type lme")
   }
   #----end of error message
@@ -261,8 +261,7 @@ mixoutsamp <- function(model, newdata) {
       solve((z.mat.oids %*% G %*% t.z.mat.oids + resid.var.mat * corr.mat)) %*%
       (y[oids.list] - xb[oids.list])
     reffects[pids.list] <-
-      zstar.mat[pids.list, ] %*% t(reffects.individual[i, , drop = FALSE])
-
+      zstar.mat[pids.list, , drop = FALSE] %*% t(reffects.individual[i, , drop = FALSE])
     #the use of drop=FALSE in z.mat on the first and second lines handles the annoying fact that when we have a matrix with one row, R automatically converts it into a vector and we get non-conformability issues.
   }
 
@@ -276,7 +275,7 @@ mixoutsamp <- function(model, newdata) {
 
   preddata = cbind(newdata, xbstar, reffects, fitted)
   names(preddata) = c(names(newdata), "fixed", "random", "fitted")
-  random = data.frame(unique(pred.ids), reffects.individual)
+  random = data.frame(names(split.obs.ids), reffects.individual)
   names(random) = c(id.name,  paste0("reff", re.names))
 
   list(preddata = preddata, random = random)

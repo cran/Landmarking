@@ -28,7 +28,7 @@
 #' not experiencing the event.
 #'
 #' For both the c-index and Brier score calculations, inverse probability censoring weighting (IPCW) is used to create weights
-#' which account for the occurence of censoring. The censoring model assumes for this function is the Kaplan Meier model, i.e. censoring occurs
+#' which account for the occurrence of censoring. The censoring model assumes for this function is the Kaplan Meier model, i.e. censoring occurs
 #' independently of covariates.
 #'
 #' The c-index is calculated using the `cindex` function in package `pec`. The Brier score is calculated using
@@ -60,7 +60,7 @@
 #'   event_status = "event_status",
 #'   event_time = "event_time",
 #'   x_hor = 65,
-#'   b = 10)}
+#'   b = 100)}
 #' @export
 
 
@@ -72,18 +72,38 @@ get_model_assessment <-
            event_time,
            x_hor,
            b) {
-    for (col in c(event_prediction,
+    if (!(inherits(data,"data.frame"))) {
+      stop("data should be a data frame")
+    }
+    if (!(inherits(individual_id,"character"))) {
+      stop("individual_id should have class character")
+    }
+    if (!(inherits(event_prediction,"character"))) {
+      stop("event_prediction should have class character")
+    }
+    if (!(inherits(event_status,"character"))) {
+      stop("event_status should have class character")
+    }
+    if (!(inherits(event_time,"character"))) {
+      stop("event_time should have class character")
+    }
+    for (col in c(individual_id,
+                  event_prediction,
                   event_status,
                   event_time)) {
       if (!(col %in% names(data))) {
         stop(col, " is not a column name in data")
       }
+      if(any(is.na(data[[col]]))){
+        stop(col, " contains NA values")
+      }
     }
-    if (!(is.numeric(x_hor))) {
+
+    if (!(inherits(x_hor,"numeric"))) {
       stop("x_hor should be numeric")
     }
     if (!is.na(b)) {
-      if (!(is.numeric(b))) {
+      if (!(inherits(b,"numeric"))) {
         stop("b should be numeric")
       }
       standard_error <- TRUE
@@ -102,6 +122,11 @@ get_model_assessment <-
     data[["event_time"]] <- data[[event_time]]
     data[["event_status"]] <- data[[event_status]]
     data[["event_prediction"]] <- data[[event_prediction]]
+
+    if (setequal(data[[event_status]],0:1)){ # survival probabilities are needed for the non-competing risks model
+      data[["event_prediction"]] <- 1 - data[["event_prediction"]]
+    }
+
     c_index <-
       pec::cindex(
         object = matrix(data[["event_prediction"]]),

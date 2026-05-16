@@ -1,6 +1,6 @@
 Package: Landmarking
 Title: Analysis using Landmark Models
-Version: 1.0.0
+Version: 1.0.2
 Authors@R: c(
     person(given = "Isobel",
            family = "Barrott",
@@ -38,12 +38,13 @@ Imports: nlme, riskRegression, dplyr, pec, methods, prodlim, stats,
 RoxygenNote: 7.1.2
 Suggests: testthat (>= 3.0.0), knitr, rmarkdown, JM
 VignetteBuilder: knitr
-Depends: R (>= 2.10)
-URL: https://github.com/isobelbarrott/Landmarking/
+Depends: R (>= 3.5.0)
+URL: https://github.com/isobelbarrott/Landmarking/,
+        https://github.com/isobelbarrott/Landmarking
 BugReports: https://github.com/isobelbarrott/Landmarking/issues
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2022-02-15 13:25:27 UTC; Isobel
+Packaged: 2026-05-16 18:26:04 UTC; qs251129
 Author: Isobel Barrott [aut, cre],
   Jessica Barrett [aut],
   Ruth Keogh [ctb],
@@ -51,4 +52,4 @@ Author: Isobel Barrott [aut, cre],
   David Stevens [ctb]
 Maintainer: Isobel Barrott <isobel.barrott@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-02-15 20:00:07 UTC
+Date/Publication: 2026-05-16 21:50:44 UTC

@@ -1,4 +1,4 @@
-#' Fit a survival sub-model
+#' Fit a survival sub-model as part of a landmarking analysis
 #'
 #' This function is a helper function for `fit_LOCF_landmark_model` and `fit_LME_landmark_model`.
 #'
@@ -19,14 +19,16 @@
 #' element in the list corresponding to a different cross-validation fold.
 #'
 #' @details
-#' For the survival submodel, there are three choices of model:
+#'
+#' This function fits the survival model from the landmark model framework. The individuals are censored at the time horizon `x_hor` and the survival model is fitted with
+#' covariates specified in parameter `covariates`.
+#'
+#' For the survival model, there are three choices of model:
 #' * the standard Cox model, this is a wrapper function for \code{coxph} from the package \code{survival}
 #' * the cause-specific model, this is a wrapper function for \code{CSC} from package \code{riskRegression}
 #' * the Fine Gray model, this is a wrapper function for \code{FGR} from package \code{riskRegression}
 #'
 #' The latter two models estimate the probability of the event of interest in the presence of competing events.
-#'
-#' For both the c-index and Brier score calculations, inverse probability censoring weighting (IPCW) is used to create weights which account for the occurrence of censoring. The censoring model assumes for this function is the Kaplan Meier model, i.e. censoring occurs independently of covariates.
 #'
 #' @author Isobel Barrott \email{isobel.barrott@@gmail.com}
 #' @export
@@ -41,10 +43,10 @@ fit_survival_model <- function(data,
                                x_hor) {
   #Checks
   #####
-  if (!(is.data.frame(data))) {
+  if (!(inherits(data,"data.frame"))) {
     stop("data should be a dataframe")
   }
-  if (!(is.numeric(x_hor))) {
+  if (!(inherits(x_hor,"numeric"))) {
     stop("x_hor should be numeric")
   }
   for (col in c(covariates,
@@ -53,6 +55,9 @@ fit_survival_model <- function(data,
                 individual_id)) {
     if (!(col %in% names(data))) {
       stop(col, " is not a column name in data")
+    }
+    if(any(is.na(data[[col]]))){
+      stop(col, " contains NA values")
     }
   }
 
@@ -93,6 +98,13 @@ fit_survival_model <- function(data,
     cv_numbers <- unique(data[[cv_name]])
     model <- as.list(cv_numbers)
     names(model) <- cv_numbers
+    Surv<-survival::Surv
+
+    #Censor at the time horizon
+    data[[event_status]][data[[event_time]] > x_hor] <-
+      0
+    data[[event_time]][data[[event_time]] > x_hor] <-
+      x_hor
 
     data_cv <- lapply(cv_numbers, function(cv_number) {
 
@@ -111,7 +123,7 @@ fit_survival_model <- function(data,
           as.formula(paste0("Surv(", event_time, ", ", event_status, "==1) ~",
                             paste0(covariates, collapse = "+")))
         model_survival <- coxph(formula_survival, data = data_train,x=TRUE)
-        data_test$event_prediction <-riskRegression::predictRisk(model_survival, times = x_hor, newdata = data_test)
+        data_test$event_prediction <- as.numeric(riskRegression::predictRisk(model_survival, times = x_hor, newdata = data_test))
       }
 
       if (survival_submodel == "cause_specific") {

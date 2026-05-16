@@ -8,15 +8,16 @@ fit_LME_landmark(
   data_long,
   x_L,
   x_hor,
-  fixed_effects,
-  random_effects,
-  fixed_effects_time,
-  random_effects_time,
+  predictors_LME,
+  responses_LME,
+  predictors_LME_time,
+  responses_LME_time,
+  random_slope_longitudinal = TRUE,
+  random_slope_survival = TRUE,
+  include_data_after_x_L = TRUE,
   individual_id,
   k,
   cross_validation_df,
-  random_slope_in_LME = TRUE,
-  random_slope_as_covariate = TRUE,
   standardise_time = FALSE,
   lme_control = nlme::lmeControl(),
   event_time,
@@ -33,19 +34,30 @@ Each data frame contains repeat measurements data and time-to-event data in long
 
 \item{x_hor}{Numeric specifying the horizon time(s)}
 
-\item{fixed_effects}{Vector of character strings specifying the column names in \code{data_long}
-which correspond to the fixed effects}
+\item{predictors_LME}{Vector of character strings specifying the column names in \code{data_long}
+which correspond to the predictor variables in the LME model}
 
-\item{random_effects}{Vector of character strings specifying the column names in \code{data_long}
-which correspond to the random effects}
+\item{responses_LME}{Vector of character strings specifying the column names in \code{data_long}
+which correspond to the response variables in the LME model}
 
-\item{fixed_effects_time}{Character string specifying the column name in \code{data_long}
-which contains the time at which the fixed effects were recorded}
+\item{predictors_LME_time}{Vector of character strings specifying the column names in \code{data_long}
+which contains the time at which the predictor variables were recorded.
+This should either be length 1 or the same length as \code{predictors_LME}.
+In the latter case the order of elements must correspond to the order of elements in \code{predictors_LME}.}
 
-\item{random_effects_time}{Vector of character strings specifying the column names in \code{data_long}
-which contain the times at which repeat measures were recorded. This should either be length 1 or
-the same length as \code{random_effects}. In the latter case the order of elements must correspond to the
-order of elements in \code{random_effects}.}
+\item{responses_LME_time}{Vector of character strings specifying the column names in \code{data_long}
+which contain the times at which response variables were recorded. This should either be length 1 or
+the same length as \code{responses_LME}. In the latter case the order of elements must correspond to the
+order of elements in \code{responses_LME}.}
+
+\item{random_slope_longitudinal}{Boolean indicating whether to include a random slope in the LME model. See Details section of \code{fit_LME_longitudinal} for more information.}
+
+\item{random_slope_survival}{Boolean indicating whether to include the random slope estimate from the LME model.
+See Details section of \code{fit_LME_longitudinal} for more information.
+as a covariate in the survival submodel. See Details section of \code{fit_LME_longitudinal} for more information.}
+
+\item{include_data_after_x_L}{Boolean indicating whether to include all longitudinal data, including data after the landmark age \code{x_L},
+in the model development dataset. See Details section of \code{fit_LME_longitudinal} for more information.}
 
 \item{individual_id}{Character string specifying the column name in \code{data_long} which contains the individual identifiers}
 
@@ -57,13 +69,8 @@ named according to the landmark time \code{x_L} that they correspond. Each data 
 which contains the cross-validation fold of the individual. An alternative to setting parameter \code{k} for performing cross-validation;
 if both are missing no cross-validation is used.}
 
-\item{random_slope_in_LME}{Boolean indicating whether to include a random slope in the LME model}
-
-\item{random_slope_as_covariate}{Boolean indicating whether to include the random slope estimate from the LME model
-as a covariate in the survival submodel.}
-
-\item{standardise_time}{Boolean indicating whether to standardise the time variables (\code{fixed_effects_time} and \code{random_effects_time}) by subtracting the mean
-and dividing by the standard deviation (see Details section for more information)}
+\item{standardise_time}{Boolean indicating whether to standardise the time variable in the LME model by subtracting the mean
+and dividing by the standard deviation. See Details section of \code{fit_LME_longitudinal} for more information.}
 
 \item{lme_control}{Object created using \code{nlme::lmeControl()}, which will be passed to the \code{control} argument of the \code{lme}
 function}
@@ -80,7 +87,7 @@ use. Three options: the standard Cox model i.e. no competing risks (\code{"stand
 the cause-specific regression model (\code{"cause_specific"}), or the Fine Gray
 regression model (\code{"fine_gray"})}
 
-\item{b}{Integer specifying the number of bootstrap samples to take when calcluating standard error of c-index and Brier score}
+\item{b}{Integer specifying the number of bootstrap samples to take when calculating standard error of c-index and Brier score}
 }
 \value{
 List containing containing information about the landmark model at each of the landmark times.
@@ -88,8 +95,8 @@ Each element of this list is named the corresponding landmark time, and is itsel
 \code{data}, \code{model_longitudinal}, \code{model_LME}, \code{model_LME_standardise_time}, \code{model_survival}, and \code{prediction_error}.
 
 \code{data} has one row for each individual in the risk set at \code{x_L} and
-contains the value of the \code{fixed_effects} using the LOCF approach and predicted values of the
-\code{random_effects} using the LME model at the landmark time \code{x_L}. It also includes the predicted
+contains the value of the \code{predictors_LME} using the LOCF approach and predicted values of the
+\code{responses_LME} using the LME model at the landmark time \code{x_L}. It also includes the predicted
 probability that the event of interest has occurred by time \code{x_hor}, labelled as \code{"event_prediction"}.
 There is one row for each individual.
 
@@ -99,9 +106,6 @@ There is one row for each individual.
 the \code{lme} function from package \code{nlme}. For a model using cross-validation,
 \code{model_LME} contains a list of outputs with each
 element in the list corresponds to a different cross-validation fold.
-\code{prediction_error} contains a list indicating the c-index and Brier score at time \code{x_hor} and their standard errors if parameter \code{b} is used.
-For more information on how the prediction error is calculated
-please see \code{?get_model_assessment} which is the function used to do this within \code{fit_LME_landmark}.
 
 \code{model_LME_standardise_time} contains a list of two objects \code{mean_response_time} and \code{sd_response_time} if the parameter \code{standardise_time=TRUE} is used. This
 is the mean and standard deviation use to normalise times when fitting the LME model.
@@ -110,10 +114,6 @@ is the mean and standard deviation use to normalise times when fitting the LME m
 the survival submodel functions, including the estimated parameters of the model. For a model using cross-validation,
 \code{model_survival} will contain a list of outputs with each
 element in the list corresponding to a different cross-validation fold.
-\code{model_survival} contains the outputs from the function used to fit the survival submodel, including the estimated parameters of the model.
-For a model using cross-validation, \code{model_survival} contains a list of outputs with each
-element in the list corresponding to a different cross-validation fold. For more information on how the survival model is fitted
-please see \code{?fit_survival_model} which is the function used to do this within \code{fit_LME_landmark}.
 
 \code{prediction_error} contains a list indicating the c-index and Brier score at time \code{x_hor} and their standard errors if parameter \code{b} is used.
 }
@@ -122,9 +122,9 @@ This function performs the two-stage landmarking analysis.
 }
 \details{
 Firstly, this function selects the individuals in the risk set at the landmark time \code{x_L}.
-Specifically, the individuals in the risk set are those that have entered the study before the landmark age
-(there is at least one observation for each of the \code{fixed_effects} and\code{random_effects} on or before \code{x_L}) and
-exited the study on after the landmark age (\code{event_time}
+Specifically, the individuals in the risk set are those that have entered the study before the landmark time \code{x_L}
+(there is at least one observation for each of the \code{predictors_LME} and \code{responses_LME} on or before \code{x_L}) and
+exited the study after the landmark age (\code{event_time}
 is greater than \code{x_L}).
 
 Secondly, if the option to use cross validation
@@ -135,9 +135,10 @@ If the parameter \code{cross_validation_df} is used, then the folds specified in
 If cross-validation is not selected then the landmark model is
 fit to the entire group of individuals in the risk set (this is both the training and test dataset).
 
-Thirdly, the landmark model is then fit to each of the training data. There are two parts to fitting the landmark model: using the longitudinal data and using the survival data.
+Thirdly, the landmark model is then fit to each of the training datasets. There are two parts to fitting the landmark model: using the longitudinal data and using the survival data.
 Using the longitudinal data is the first stage and is performed using \code{fit_LME_longitudinal}. See \code{?fit_LME_longitudinal} more for information about this function.
-Using the survival data is the second stage and is performed using \code{fit_survival_model}. See \code{?fit_survival_model} more for information about this function.
+Using the survival data is the second stage and is performed using \code{fit_survival_model}. This function censors the
+individuals at the time horizon \code{x_L} and fits the survival model. See \code{?fit_survival_model} more for information about this function.
 
 Fourthly, the performance of the model is then assessed on the set of predictions
 from the entire set of individuals in the risk set by calculating Brier score and C-index.
@@ -153,10 +154,10 @@ data_model_landmark_LME <-
     x_L = c(60, 61),
     x_hor = c(65, 66),
     k = 10,
-    fixed_effects = c("ethnicity", "smoking", "diabetes"),
-    fixed_effects_time = "response_time_sbp_stnd",
-    random_effects = c("sbp_stnd", "tchdl_stnd"),
-    random_effects_time = c("response_time_sbp_stnd", "response_time_tchdl_stnd"),
+    predictors_LME = c("ethnicity", "smoking", "diabetes"),
+    predictors_LME_time = "response_time_sbp_stnd",
+    responses_LME = c("sbp_stnd", "tchdl_stnd"),
+    responses_LME_time = c("response_time_sbp_stnd", "response_time_tchdl_stnd"),
     individual_id = "id",
     standardise_time = TRUE,
     lme_control = nlme::lmeControl(maxIter = 100, msMaxIter = 100),
